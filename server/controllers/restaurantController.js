@@ -34,13 +34,20 @@ export const handleRestaurantId = async (req, res) =>{
 
 export const handleRestaurantTags = async (req, res) => {
     try {
-        const tags = await tag.find()
-        res.status(200).json(tags)
+        // Use aggregation to unwind the tags array and then group to get unique tags
+        const tags = await Restaurant.aggregate([
+            { $unwind: "$tags" }, // Separate the tags array into individual documents
+            { $group: { _id: "$tags.name" } }, // Group by tag name to get unique tags
+            { $project: { _id: 0, name: "$_id" } } // Project the result to have a 'name' field
+        ]);
+
+        res.status(200).json(tags);
     } catch (error) {
-        console.log(error.message)
-        res.status(500).send('Eror in tags:', error.message)
+        console.log(error.message);
+        res.status(500).send('Error in handleRestaurantTags:', error.message);
     }
 }
+
 
 export const handleCity = async (req, res) => {
 
