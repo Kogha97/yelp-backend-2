@@ -22,15 +22,24 @@ export const handleRestaurant = async (req, res) =>{
     }
 }
 
-export const handleRestaurantId = async (req, res) =>{
-    const {_id} = req.params
-    try{
-        const response = await Restaurant.findOne({_id});
-        res.status(200).send(response);
-    } catch (error){
-        res.status(401).send('Error in handleRestaurantId:', error.message)
+export const handleRestaurantId = async (req, res) => {
+    try {
+        console.log("Get one restaurant by id", req.params.id);
+        // Use the custom `id` field for querying instead of MongoDB's `_id`
+        const restaurant = await Restaurant.findOne({ id: req.params.id });
+        console.log("Restaurant", restaurant);
+        if (restaurant) {
+            res.send(restaurant);
+        } else {
+            res.status(404).send({ success: false, error: "Restaurant not found" });
+        }
+    } catch (error) {
+        console.log("Error in get one restaurant: ", error.message);
+        res.status(500).send({ success: false, error: error.message });
     }
-}
+};
+
+
 
 export const handleRestaurantTags = async (req, res) => {
     try {

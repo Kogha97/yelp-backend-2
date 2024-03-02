@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/add", handleAdd)
 router.get('/restaurant',handleRestaurant)
-router.get('/restaurant/:id', handleRestaurantId)
+router.get("/getById/:id", handleRestaurantId)
 router.get('/tags', handleRestaurantTags)
 router.get('/city/:city', handleCity)
 router.get('/tags/:tagName', handleRestaurantTagsName);
